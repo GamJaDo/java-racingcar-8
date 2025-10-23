@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class Application {
 
     public static void main(String[] args) {
@@ -21,9 +20,9 @@ public class Application {
         HashMap<String, Integer> racingProgress = racingProgressReset(carNameList);
 
         System.out.println("시도할 횟수는 몇 회인가요?");
-        int attemptCount = Integer.parseInt(Console.readLine());
+        int attemptCount = getAttemptCount();
 
-        System.out.println("실행 결과");
+        System.out.println("\n실행 결과");
         for (int i = 0; i < attemptCount; i++) {
             runRacing(carNameList, racingProgress);
             printProgress(carNameList, racingProgress);
@@ -33,6 +32,9 @@ public class Application {
     }
 
     public static List<String> parseCarNames(String carNames) {
+        if (!carNames.contains(",")) {
+            throw new IllegalArgumentException("구분자 쉼표(,)가 존재하지 않습니다.");
+        }
 
         return List.of(carNames.split(","));
     }
@@ -40,10 +42,30 @@ public class Application {
     public static HashMap<String, Integer> racingProgressReset(List<String> carNameList) {
         HashMap<String, Integer> racingProgress = new HashMap<String, Integer>();
         for (String carName : carNameList) {
-            racingProgress.put(carName, 0);
+            if (validateCarName(carName)) {
+                racingProgress.put(carName, 0);
+            }
         }
 
         return racingProgress;
+    }
+
+    public static boolean validateCarName(String carName) {
+        if (carName.length() > 5) {
+            throw new IllegalArgumentException("자동차 이름은 5자 이하만 가능합니다.");
+        }
+
+        return true;
+    }
+
+    public static int getAttemptCount() {
+        String attemptCount = Console.readLine();
+
+        if (!attemptCount.matches("\\d+")) {
+            throw new IllegalArgumentException("시도 횟수는 숫자만 입력해야 합니다.");
+        }
+
+        return Integer.parseInt(attemptCount);
     }
 
     public static void runRacing(List<String> carNameList, Map<String, Integer> racingProgress) {
@@ -64,6 +86,7 @@ public class Application {
             }
             System.out.println();
         }
+        System.out.println();
     }
 
     public static void printResult(Map<String, Integer> racingProgress) {
