@@ -28,6 +28,8 @@ public class Application {
             runRacing(carNameList, racingProgress);
             printProgress(carNameList, racingProgress);
         }
+
+        printResult(racingProgress);
     }
 
     public static List<String> parseCarNames(String carNames) {
@@ -62,5 +64,18 @@ public class Application {
             }
             System.out.println();
         }
+    }
+
+    public static void printResult(Map<String, Integer> racingProgress) {
+        int maxProgress = Collections.max(racingProgress.values());
+
+        List<String> winnerCars = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : racingProgress.entrySet()) {
+            if (entry.getValue() == maxProgress) {
+                winnerCars.add(entry.getKey());
+            }
+        }
+
+        System.out.println("최종 우승자 : " + String.join(", ", winnerCars));
     }
 }
