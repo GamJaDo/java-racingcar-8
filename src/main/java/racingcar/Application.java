@@ -1,104 +1,11 @@
 package racingcar;
 
-import camp.nextstep.edu.missionutils.Console;
-import camp.nextstep.edu.missionutils.Randoms;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import racingcar.controller.RacingcarContoller;
 
 public class Application {
 
     public static void main(String[] args) {
-
-        System.out.println("경주할 자동차 이름을 입력하세요.(이름은 쉼표(,) 기준으로 구분)");
-        String carNames = Console.readLine();
-
-        List<String> carNameList = parseCarNames(carNames);
-
-        HashMap<String, Integer> racingProgress = racingProgressReset(carNameList);
-
-        System.out.println("시도할 횟수는 몇 회인가요?");
-        int attemptCount = getAttemptCount();
-
-        System.out.println("\n실행 결과");
-        for (int i = 0; i < attemptCount; i++) {
-            runRacing(carNameList, racingProgress);
-            printProgress(carNameList, racingProgress);
-        }
-
-        printResult(racingProgress);
-    }
-
-    public static List<String> parseCarNames(String carNames) {
-        if (!carNames.contains(",")) {
-            throw new IllegalArgumentException("구분자 쉼표(,)가 존재하지 않습니다.");
-        }
-
-        return List.of(carNames.split(","));
-    }
-
-    public static HashMap<String, Integer> racingProgressReset(List<String> carNameList) {
-        HashMap<String, Integer> racingProgress = new HashMap<String, Integer>();
-        for (String carName : carNameList) {
-            if (validateCarName(carName)) {
-                racingProgress.put(carName, 0);
-            }
-        }
-
-        return racingProgress;
-    }
-
-    public static boolean validateCarName(String carName) {
-        if (carName.length() > 5) {
-            throw new IllegalArgumentException("자동차 이름은 5자 이하만 가능합니다.");
-        }
-
-        return true;
-    }
-
-    public static int getAttemptCount() {
-        String attemptCount = Console.readLine();
-
-        if (!attemptCount.matches("\\d+")) {
-            throw new IllegalArgumentException("시도 횟수는 숫자만 입력해야 합니다.");
-        }
-
-        return Integer.parseInt(attemptCount);
-    }
-
-    public static void runRacing(List<String> carNameList, Map<String, Integer> racingProgress) {
-        for (String carName : carNameList) {
-            int randomNumber = Randoms.pickNumberInRange(0, 9);
-            if (randomNumber >= 4) {
-                racingProgress.put(carName, racingProgress.get(carName) + 1);
-            }
-        }
-    }
-
-    public static void printProgress(List<String> carNameList, Map<String, Integer> racingProgress) {
-
-        for (String carName : carNameList) {
-            System.out.print(carName + " : ");
-            for (int j = 0; j < racingProgress.get(carName); j++) {
-                System.out.print("-");
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
-
-    public static void printResult(Map<String, Integer> racingProgress) {
-        int maxProgress = Collections.max(racingProgress.values());
-
-        List<String> winnerCars = new ArrayList<>();
-        for (Map.Entry<String, Integer> entry : racingProgress.entrySet()) {
-            if (entry.getValue() == maxProgress) {
-                winnerCars.add(entry.getKey());
-            }
-        }
-
-        System.out.println("최종 우승자 : " + String.join(", ", winnerCars));
+        RacingcarContoller racingcarContoller = new RacingcarContoller();
+        racingcarContoller.RacingcarRun();
     }
 }
